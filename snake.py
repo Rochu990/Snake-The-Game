@@ -4,6 +4,9 @@ from curses import textpad
 
 def main(stdscr):
     curses.curs_set(0)
+    stdscr.nodelay(1)
+    stdscr.timeout(150)
+
     sh, sw = stdscr.getmaxyx()
     box = [[3, 3], [sh - 3, sw - 3]]
     textpad.rectangle(stdscr, box[0][0], box[0][1], box[1][0], box[1][1])
@@ -36,6 +39,17 @@ def main(stdscr):
 
         stdscr.addstr(snake[-1][0], snake[-1][1], " ")
         snake.pop()
+
+        if (
+            snake[0][0] in [box[0][0], box[1][0]]
+            or snake[0][1] in [box[0][1], box[1][1]]
+            or snake[0] in snake[1:]
+        ):
+            msg = "Game Over"
+            stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
+            stdscr.nodelay(0)
+            stdscr.getch()
+            break
 
         stdscr.refresh()
 

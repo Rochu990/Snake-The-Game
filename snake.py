@@ -1,5 +1,18 @@
 import curses
+import random
 from curses import textpad
+
+
+def create_food(snake, box):
+    food = None
+    while food is None:
+        food = [
+            random.randint(box[0][0] + 1, box[1][0] - 1),
+            random.randint(box[0][1] + 1, box[1][1] - 1),
+        ]
+        if food in snake:
+            food = None
+    return food
 
 
 def main(stdscr):
@@ -16,6 +29,9 @@ def main(stdscr):
 
     for y, x in snake:
         stdscr.addstr(y, x, "#")
+
+    food = create_food(snake, box)
+    stdscr.addstr(food[0], food[1], "*")
 
     while 1:
         key = stdscr.getch()
@@ -37,8 +53,12 @@ def main(stdscr):
         snake.insert(0, new_head)
         stdscr.addstr(new_head[0], new_head[1], "#")
 
-        stdscr.addstr(snake[-1][0], snake[-1][1], " ")
-        snake.pop()
+        if snake[0] == food:
+            food = create_food(snake, box)
+            stdscr.addstr(food[0], food[1], "*")
+        else:
+            stdscr.addstr(snake[-1][0], snake[-1][1], " ")
+            snake.pop()
 
         if (
             snake[0][0] in [box[0][0], box[1][0]]

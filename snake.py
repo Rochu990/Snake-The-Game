@@ -15,6 +15,13 @@ def create_food(snake, box):
     return food
 
 
+def print_score(stdscr, score):
+    sh, sw = stdscr.getmaxyx()
+    score_text = "Score: {}".format(score)
+    stdscr.addstr(0, sw // 2 - len(score_text) // 2, score_text)
+    stdscr.refresh()
+
+
 def main(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(1)
@@ -32,6 +39,9 @@ def main(stdscr):
 
     food = create_food(snake, box)
     stdscr.addstr(food[0], food[1], "*")
+
+    score = 0
+    print_score(stdscr, score)
 
     while 1:
         key = stdscr.getch()
@@ -56,6 +66,8 @@ def main(stdscr):
         if snake[0] == food:
             food = create_food(snake, box)
             stdscr.addstr(food[0], food[1], "*")
+            score += 1
+            print_score(stdscr, score)
         else:
             stdscr.addstr(snake[-1][0], snake[-1][1], " ")
             snake.pop()

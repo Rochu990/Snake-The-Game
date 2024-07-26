@@ -47,7 +47,14 @@ def main(stdscr):
         key = stdscr.getch()
 
         if key in [curses.KEY_RIGHT, curses.KEY_LEFT, curses.KEY_UP, curses.KEY_DOWN]:
-            direction = key
+            oppo = {
+                curses.KEY_RIGHT: curses.KEY_LEFT,
+                curses.KEY_LEFT: curses.KEY_RIGHT,
+                curses.KEY_UP: curses.KEY_DOWN,
+                curses.KEY_DOWN: curses.KEY_UP,
+            }
+            if direction != oppo[key]:
+                direction = key
 
         head = snake[0]
 

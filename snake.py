@@ -26,6 +26,7 @@ def main(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(1)
     stdscr.timeout(150)
+    stdscr.clear()
 
     sh, sw = stdscr.getmaxyx()
     box = [[3, 3], [sh - 3, sw - 3]]

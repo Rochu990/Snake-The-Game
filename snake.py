@@ -46,15 +46,7 @@ def main(stdscr):
     while 1:
         key = stdscr.getch()
 
-        if key in [curses.KEY_RIGHT, curses.KEY_LEFT, curses.KEY_UP, curses.KEY_DOWN]:
-            oppo = {
-                curses.KEY_RIGHT: curses.KEY_LEFT,
-                curses.KEY_LEFT: curses.KEY_RIGHT,
-                curses.KEY_UP: curses.KEY_DOWN,
-                curses.KEY_DOWN: curses.KEY_UP,
-            }
-            if direction != oppo[key]:
-                direction = key
+        direction = select_direction(direction, key)
 
         head = snake[0]
 
@@ -79,11 +71,7 @@ def main(stdscr):
             stdscr.addstr(snake[-1][0], snake[-1][1], " ")
             snake.pop()
 
-        if (
-            snake[0][0] in [box[0][0], box[1][0]]
-            or snake[0][1] in [box[0][1], box[1][1]]
-            or snake[0] in snake[1:]
-        ):
+        if should_finish(box, snake):
             msg = "Game Over"
             stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
             stdscr.nodelay(0)
@@ -93,4 +81,26 @@ def main(stdscr):
         stdscr.refresh()
 
 
-curses.wrapper(main)
+def should_finish(box, snake):
+    return (
+        snake[0][0] in [box[0][0], box[1][0]]
+        or snake[0][1] in [box[0][1], box[1][1]]
+        or snake[0] in snake[1:]
+    )
+
+
+def select_direction(direction, key):
+    if key in [curses.KEY_RIGHT, curses.KEY_LEFT, curses.KEY_UP, curses.KEY_DOWN]:
+        oppo = {
+            curses.KEY_RIGHT: curses.KEY_LEFT,
+            curses.KEY_LEFT: curses.KEY_RIGHT,
+            curses.KEY_UP: curses.KEY_DOWN,
+            curses.KEY_DOWN: curses.KEY_UP,
+        }
+        if direction != oppo[key]:
+            direction = key
+    return direction
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)

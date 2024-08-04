@@ -4,6 +4,16 @@ from curses import textpad
 from snake import main
 
 
+def get_player_name(stdscr):
+    stdscr.clear()
+    stdscr.addstr(0, 0, "Wpisz swoje imię: ")
+    curses.echo()
+    player_name = stdscr.getstr(0, 18, 20).decode("utf-8")
+    curses.noecho()
+    stdscr.clear()
+    return player_name
+
+
 def print_menu(stdscr, selected_row_idx):
     stdscr.clear()
     sh, sw = stdscr.getmaxyx()
@@ -42,7 +52,8 @@ def menu(stdscr):
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
             if current_row == 0:
-                main(stdscr)
+                player_name = get_player_name(stdscr)
+                main(stdscr, player_name)
                 print_menu(stdscr, current_row)
             else:
                 stdscr.addstr(10, 10, f"Wybrano opcję {current_row + 1}")
@@ -51,6 +62,9 @@ def menu(stdscr):
                 break
 
         print_menu(stdscr, current_row)
+
+
+curses.wrapper(menu)
 
 
 curses.wrapper(menu)

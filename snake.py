@@ -15,18 +15,18 @@ def create_food(snake, box):
     return food
 
 
-def print_score(stdscr, score):
+def print_score(stdscr, score, player_name):
     sh, sw = stdscr.getmaxyx()
     score_text = "Score: {}".format(score)
-    stdscr.addstr(0, sw // 2 - len(score_text) // 2, score_text)
-    stdscr.refresh()
+    name_text = "Player: {}".format(player_name)
+    full_text = "{}  |  {}".format(name_text, score_text)
+    stdscr.addstr(0, sw // 2 - len(full_text) // 2, full_text)
 
 
-def main(stdscr):
+def main(stdscr, player_name):
     curses.curs_set(0)
     stdscr.nodelay(1)
-    stdscr.timeout(150)
-    stdscr.clear()
+    stdscr.timeout(100)
 
     sh, sw = stdscr.getmaxyx()
     box = [[3, 3], [sh - 3, sw - 3]]
@@ -42,13 +42,11 @@ def main(stdscr):
     stdscr.addstr(food[0], food[1], "*")
 
     score = 0
-    print_score(stdscr, score)
+    print_score(stdscr, score, player_name)
 
     while 1:
         key = stdscr.getch()
-
         direction = select_direction(direction, key)
-
         head = snake[0]
 
         if direction == curses.KEY_RIGHT:
@@ -67,7 +65,7 @@ def main(stdscr):
             food = create_food(snake, box)
             stdscr.addstr(food[0], food[1], "*")
             score += 1
-            print_score(stdscr, score)
+            print_score(stdscr, score, player_name)
         else:
             stdscr.addstr(snake[-1][0], snake[-1][1], " ")
             snake.pop()

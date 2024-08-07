@@ -16,11 +16,7 @@ def create_food(snake, box):
 
 
 def print_score(stdscr, score, player_name):
-    sh, sw = stdscr.getmaxyx()
-    score_text = "Score: {}".format(score)
-    name_text = "Player: {}".format(player_name)
-    full_text = "{}  |  {}".format(name_text, score_text)
-    stdscr.addstr(0, sw // 2 - len(full_text) // 2, full_text)
+    stdscr.addstr(1, 2, f"Score: {score} | Player: {player_name}")
 
 
 def main(stdscr, player_name):
@@ -29,10 +25,12 @@ def main(stdscr, player_name):
     stdscr.timeout(100)
 
     sh, sw = stdscr.getmaxyx()
+    w, h = sw // 2, sh // 2
     box = [[3, 3], [sh - 3, sw - 3]]
+
     textpad.rectangle(stdscr, box[0][0], box[0][1], box[1][0], box[1][1])
 
-    snake = [[sh // 2, sw // 2 + 1], [sh // 2, sw // 2], [sh // 2, sw // 2 - 1]]
+    snake = [[sh // 2, sw // 4 + i] for i in range(4)][::-1]
     direction = curses.KEY_RIGHT
 
     for y, x in snake:
@@ -71,6 +69,7 @@ def main(stdscr, player_name):
             snake.pop()
 
         if should_finish(box, snake):
+            save_high_score(player_name, score)
             msg = "Game Over"
             stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
             stdscr.nodelay(0)
@@ -99,6 +98,21 @@ def select_direction(direction, key):
         if direction != oppo[key]:
             direction = key
     return direction
+
+
+def save_high_score(player_name, score, file_path="highscores.txt"):
+    try:
+        with open(file_path, "r") as f:
+            scores = [line.strip().split(" - ") for line in f.readlines()]
+    except FileNotFoundError:
+        scores = []
+
+    scores.append([player_name, str(score)])
+    scores = sorted(scores, key=lambda x: int(x[1]), reverse=True)[:10]
+
+    with open(file_path, "w") as f:
+        for player, score in scores:
+            f.write(f"{player} - {score}\n")
 
 
 if __name__ == "__main__":

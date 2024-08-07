@@ -14,6 +14,33 @@ def get_player_name(stdscr):
     return player_name
 
 
+def read_high_scores(file_path="highscores.txt"):
+    try:
+        with open(file_path, "r") as f:
+            scores = f.readlines()
+        scores = [score.strip() for score in scores]
+    except FileNotFoundError:
+        scores = []
+    return scores
+
+
+def display_high_scores(stdscr):
+    stdscr.clear()
+    scores = read_high_scores()
+    if scores:
+        stdscr.addstr(0, 0, "Najlepsze Wyniki:")
+        for idx, score in enumerate(scores):
+            stdscr.addstr(idx + 1, 0, score)
+    else:
+        stdscr.addstr(0, 0, "Brak wyników.")
+    stdscr.refresh()
+
+    while True:
+        key = stdscr.getch()
+        if key == 27:  # Kod klawisza Escape
+            break
+
+
 def print_menu(stdscr, selected_row_idx):
     stdscr.clear()
     sh, sw = stdscr.getmaxyx()
@@ -55,16 +82,10 @@ def menu(stdscr):
                 player_name = get_player_name(stdscr)
                 main(stdscr, player_name)
                 print_menu(stdscr, current_row)
-            else:
-                stdscr.addstr(10, 10, f"Wybrano opcję {current_row + 1}")
-                stdscr.refresh()
-                stdscr.getch()
-                break
+            elif current_row == 1:
+                display_high_scores(stdscr)
 
         print_menu(stdscr, current_row)
-
-
-curses.wrapper(menu)
 
 
 curses.wrapper(menu)

@@ -70,10 +70,16 @@ def main(stdscr, player_name):
 
         if should_finish(box, snake):
             save_high_score(player_name, score)
-            msg = "Game Over"
+            msg = "Game Over!"
             stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
-            stdscr.nodelay(0)
-            stdscr.getch()
+            stdscr.refresh()
+
+            # Czekaj na naciśnięcie dowolnego klawisza
+            stdscr.nodelay(0)  # Ustaw tryb blokujący
+            while True:
+                if stdscr.getch() != -1:
+                    break
+
             break
 
         stdscr.refresh()

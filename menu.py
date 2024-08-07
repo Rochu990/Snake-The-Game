@@ -37,7 +37,7 @@ def display_high_scores(stdscr):
 
     while True:
         key = stdscr.getch()
-        if key == 27:  # Kod klawisza Escape
+        if key == 27:
             break
 
 

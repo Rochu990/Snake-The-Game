@@ -74,8 +74,7 @@ def main(stdscr, player_name):
             stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
             stdscr.refresh()
 
-            # Czekaj na naciśnięcie dowolnego klawisza
-            stdscr.nodelay(0)  # Ustaw tryb blokujący
+            stdscr.nodelay(0)  
             while True:
                 if stdscr.getch() != -1:
                     break
